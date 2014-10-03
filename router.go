@@ -22,6 +22,8 @@ type RouteBuilder struct {
 
 type Handler func(ctx *Context)
 
+// Router API
+
 func NewRouter() *Router {
   return &Router{mux.NewRouter()}
 }
@@ -46,6 +48,12 @@ func (r *Router) Route(url string) *RouteBuilder {
     }
   })
   return rb
+}
+
+// RouteBuilder API
+
+// Ends chain
+func (r *RouteBuilder) End() {
 }
 
 // Registers GET handler

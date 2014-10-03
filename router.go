@@ -28,6 +28,11 @@ func NewRouter() *Router {
   return &Router{mux.NewRouter()}
 }
 
+// implement http.Handler
+func (r *Router) ServeHTTP(w http.ResponseWriter, req* http.Request) {
+  r.impl.ServeHTTP(w, req)
+}
+
 func (r *Router) Route(url string) *RouteBuilder {
   rb := &RouteBuilder{}
   r.impl.HandleFunc(url, func(w http.ResponseWriter, req* http.Request) {

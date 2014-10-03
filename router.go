@@ -20,7 +20,7 @@ type RouteBuilder struct {
   del func(*Context)
 }
 
-type Handler func(ctx *Context)
+type Handler func(*Context)
 
 // Router API
 
@@ -51,10 +51,6 @@ func (r *Router) Route(url string) *RouteBuilder {
 }
 
 // RouteBuilder API
-
-// Ends chain
-func (r *RouteBuilder) End() {
-}
 
 // Registers GET handler
 func (r *RouteBuilder) Get(h Handler) *RouteBuilder {

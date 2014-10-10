@@ -46,7 +46,8 @@ func (app *AppBuilder) Route(pattern string) *RouteBuilder {
 		app.routes[pattern] = rb
 
 		app.impl.HandleFunc(pattern, func(w http.ResponseWriter, req *http.Request) {
-			ctx := &Context{w, req, app}
+			vars := mux.Vars(req)
+			ctx := &Context{w, req, vars, app}
 
 			var res interface{} = nil
 			var err error = nil

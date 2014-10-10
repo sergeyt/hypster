@@ -2,7 +2,7 @@ package hypster
 
 import (
 	"net/http"
-
+	"encoding/json"
 	"github.com/gorilla/mux"
 )
 
@@ -14,7 +14,12 @@ type AppBuilder struct {
 }
 
 // Handler is function to process HTTP requests
-type Handler func(*Context)
+type Handler func(*Context) (interface{}, error)
+
+// TODO add error type
+type errorPayload struct {
+	error string
+}
 
 // NewApp creates new instance of AppBuilder
 func NewApp(services map[string]interface{}) *AppBuilder {
@@ -42,20 +47,33 @@ func (app *AppBuilder) Route(pattern string) *RouteBuilder {
 
 		app.impl.HandleFunc(pattern, func(w http.ResponseWriter, req *http.Request) {
 			ctx := &Context{w, req, app}
+
+			var res interface{} = nil
+			var err error = nil
+			var bytes []byte
+
 			switch req.Method {
 			case "GET":
-				rb.get(ctx)
+				res, err = rb.get(ctx)
 			case "POST":
-				rb.post(ctx)
+				res, err = rb.post(ctx)
 			case "PUT":
-				rb.post(ctx)
+				res, err = rb.post(ctx)
 			case "UPDATE":
-				rb.update(ctx)
+				res, err = rb.update(ctx)
 			case "PATCH":
-				rb.patch(ctx)
+				res, err = rb.patch(ctx)
 			case "DELETE":
-				rb.del(ctx)
+				res, err = rb.del(ctx)
 			}
+
+			if err != nil {
+				bytes, _ = json.Marshal(errorPayload{err.Error()})
+			} else {
+				bytes, _ = json.Marshal(res)
+			}
+
+			w.Write(bytes)
 		})
 	}
 

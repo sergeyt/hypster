@@ -4,12 +4,12 @@ package hypster
 type RouteBuilder struct {
 	app *AppBuilder
 	// handlers
-	get    func(*Context)
-	post   func(*Context)
-	put    func(*Context)
-	update func(*Context)
-	patch  func(*Context)
-	del    func(*Context)
+	get    Handler
+	post   Handler
+	put    Handler
+	update Handler
+	patch  Handler
+	del    Handler
 }
 
 // Get registers GET handler

@@ -1,2 +1,2 @@
-// Fluent API for gorilla mux
+// Package hypster provides fluent API for gorilla mux
 package hypster

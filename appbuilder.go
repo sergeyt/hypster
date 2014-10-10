@@ -32,7 +32,7 @@ func (app *AppBuilder) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	app.impl.ServeHTTP(w, req)
 }
 
-// GetServices lookups service with given key
+// GetService finds service from services map of the current web application.
 func (app *AppBuilder) GetService(key string) interface{} {
 	return app.services[key]
 }
@@ -49,8 +49,8 @@ func (app *AppBuilder) Route(pattern string) *RouteBuilder {
 			vars := mux.Vars(req)
 			ctx := &Context{w, req, vars, app}
 
-			var res interface{} = nil
-			var err error = nil
+			var res interface{}
+			var err error
 			var bytes []byte
 
 			switch req.Method {

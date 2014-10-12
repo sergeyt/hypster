@@ -1,9 +1,9 @@
 package hypster
 
 import (
-	"net/http"
 	"encoding/json"
 	"github.com/gorilla/mux"
+	"net/http"
 )
 
 // AppBuilder provides fluent API to create RESTful web apps
@@ -15,11 +15,6 @@ type AppBuilder struct {
 
 // Handler is function to process HTTP requests
 type Handler func(*Context) (interface{}, error)
-
-// TODO add error type
-type errorPayload struct {
-	error string
-}
 
 // NewApp creates new instance of AppBuilder
 func NewApp(services map[string]interface{}) *AppBuilder {

@@ -61,6 +61,10 @@ func (app *AppBuilder) Route(pattern string) *RouteBuilder {
 				res, err = rb.patch(ctx)
 			case "DELETE":
 				res, err = rb.del(ctx)
+			case "HEAD":
+				res, err = rb.head(ctx)
+			case "OPTIONS":
+				res, err = rb.options(ctx)
 			}
 
 			if err != nil {
@@ -77,6 +81,18 @@ func (app *AppBuilder) Route(pattern string) *RouteBuilder {
 }
 
 // Shortcuts
+
+// Head registers HEAD handler
+func (app *AppBuilder) Head(pattern string, handler Handler) *AppBuilder {
+	app.Route(pattern).Head(handler)
+	return app
+}
+
+// Options registers OPTIONS handler
+func (app *AppBuilder) Options(pattern string, handler Handler) *AppBuilder {
+	app.Route(pattern).Options(handler)
+	return app
+}
 
 // Get registers GET handler
 func (app *AppBuilder) Get(pattern string, handler Handler) *AppBuilder {

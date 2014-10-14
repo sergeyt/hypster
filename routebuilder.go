@@ -4,12 +4,26 @@ package hypster
 type RouteBuilder struct {
 	app *AppBuilder
 	// handlers
-	get    Handler
-	post   Handler
-	put    Handler
-	update Handler
-	patch  Handler
-	del    Handler
+	head    Handler
+	options Handler
+	get     Handler
+	post    Handler
+	put     Handler
+	update  Handler
+	patch   Handler
+	del     Handler
+}
+
+// Head registers HEAD handler
+func (r *RouteBuilder) Head(handler Handler) *RouteBuilder {
+	r.head = handler
+	return r
+}
+
+// Options registers OPTIONS handler
+func (r *RouteBuilder) Options(handler Handler) *RouteBuilder {
+	r.options = handler
+	return r
 }
 
 // Get registers GET handler

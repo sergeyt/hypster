@@ -37,7 +37,7 @@ func (app *AppBuilder) Route(pattern string) *RouteBuilder {
 	rb := app.routes[pattern]
 
 	if rb == nil {
-		rb := &RouteBuilder{app: app}
+		rb = &RouteBuilder{app: app}
 		app.routes[pattern] = rb
 
 		app.impl.HandleFunc(pattern, func(w http.ResponseWriter, req *http.Request) {

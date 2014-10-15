@@ -3,7 +3,7 @@
 
 # hypster
 
-Small package with fluent API for [gorilla mux](http://www.gorillatoolkit.org/pkg/mux).
+Small package with [express.js](http://expressjs.com/) like API for [gorilla mux](http://www.gorillatoolkit.org/pkg/mux).
 
 ## Install
 

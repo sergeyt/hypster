@@ -1,9 +1,7 @@
 package hypster
 
-import (
-	"encoding/json"
-	"net/http"
-)
+import "encoding/json"
+import "net/http"
 
 // Context defines context of HTTP request
 type Context struct {

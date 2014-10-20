@@ -1,15 +1,11 @@
 package hypster
 
-import (
-	"encoding/json"
-	"github.com/gorilla/mux"
-	"net/http"
-)
+import "net/http"
+import "github.com/gorilla/mux"
 
 // AppBuilder provides fluent API to create RESTful web apps
 type AppBuilder struct {
-	impl     *mux.Router
-	routes   map[string]*RouteBuilder
+	router   *mux.Router
 	services map[string]interface{}
 }
 
@@ -18,13 +14,15 @@ type Handler func(*Context) (interface{}, error)
 
 // NewApp creates new instance of AppBuilder
 func NewApp(services map[string]interface{}) *AppBuilder {
-	routes := make(map[string]*RouteBuilder)
-	return &AppBuilder{mux.NewRouter(), routes, services}
+	return &AppBuilder{
+		router:   mux.NewRouter(),
+		services: services,
+	}
 }
 
 // ServeHTTP implements http.Handler
 func (app *AppBuilder) ServeHTTP(w http.ResponseWriter, req *http.Request) {
-	app.impl.ServeHTTP(w, req)
+	app.router.ServeHTTP(w, req)
 }
 
 // GetService finds service from services map of the current web application.
@@ -34,50 +32,7 @@ func (app *AppBuilder) GetService(key string) interface{} {
 
 // Route returns RouteBuilder for given URL pattern
 func (app *AppBuilder) Route(pattern string) *RouteBuilder {
-	rb := app.routes[pattern]
-
-	if rb == nil {
-		rb = &RouteBuilder{app: app}
-		app.routes[pattern] = rb
-
-		app.impl.HandleFunc(pattern, func(w http.ResponseWriter, req *http.Request) {
-			vars := mux.Vars(req)
-			ctx := &Context{w, req, vars, app}
-
-			var res interface{}
-			var err error
-			var bytes []byte
-
-			switch req.Method {
-			case "GET":
-				res, err = rb.get(ctx)
-			case "POST":
-				res, err = rb.post(ctx)
-			case "PUT":
-				res, err = rb.post(ctx)
-			case "UPDATE":
-				res, err = rb.update(ctx)
-			case "PATCH":
-				res, err = rb.patch(ctx)
-			case "DELETE":
-				res, err = rb.del(ctx)
-			case "HEAD":
-				res, err = rb.head(ctx)
-			case "OPTIONS":
-				res, err = rb.options(ctx)
-			}
-
-			if err != nil {
-				bytes, _ = json.Marshal(errorPayload{err.Error()})
-			} else {
-				bytes, _ = json.Marshal(res)
-			}
-
-			w.Write(bytes)
-		})
-	}
-
-	return rb
+	return &RouteBuilder{app, pattern}
 }
 
 // Shortcuts

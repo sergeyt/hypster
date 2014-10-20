@@ -1,63 +1,73 @@
 package hypster
 
+import "net/http"
+import "encoding/json"
+import "github.com/gorilla/mux"
+
 // RouteBuilder holds route handlers
 type RouteBuilder struct {
-	app *AppBuilder
-	// handlers
-	head    Handler
-	options Handler
-	get     Handler
-	post    Handler
-	put     Handler
-	update  Handler
-	patch   Handler
-	del     Handler
+	app     *AppBuilder
+	pattern string // current URL pattern
 }
 
 // Head registers HEAD handler
-func (r *RouteBuilder) Head(handler Handler) *RouteBuilder {
-	r.head = handler
-	return r
+func (route *RouteBuilder) Head(handler Handler) *RouteBuilder {
+	return route.register("HEAD", handler)
 }
 
 // Options registers OPTIONS handler
-func (r *RouteBuilder) Options(handler Handler) *RouteBuilder {
-	r.options = handler
-	return r
+func (route *RouteBuilder) Options(handler Handler) *RouteBuilder {
+	return route.register("OPTIONS", handler)
 }
 
 // Get registers GET handler
-func (r *RouteBuilder) Get(handler Handler) *RouteBuilder {
-	r.get = handler
-	return r
+func (route *RouteBuilder) Get(handler Handler) *RouteBuilder {
+	return route.register("GET", handler)
 }
 
 // Post registers POST handler
-func (r *RouteBuilder) Post(handler Handler) *RouteBuilder {
-	r.post = handler
-	return r
+func (route *RouteBuilder) Post(handler Handler) *RouteBuilder {
+	return route.register("POST", handler)
 }
 
 // Put registers PUT handler
-func (r *RouteBuilder) Put(handler Handler) *RouteBuilder {
-	r.put = handler
-	return r
+func (route *RouteBuilder) Put(handler Handler) *RouteBuilder {
+	return route.register("PUT", handler)
 }
 
 // Update registers UPDATE handler
-func (r *RouteBuilder) Update(handler Handler) *RouteBuilder {
-	r.update = handler
-	return r
+func (route *RouteBuilder) Update(handler Handler) *RouteBuilder {
+	return route.register("UPDATE", handler)
 }
 
 // Patch registers PATCH handler
-func (r *RouteBuilder) Patch(handler Handler) *RouteBuilder {
-	r.patch = handler
-	return r
+func (route *RouteBuilder) Patch(handler Handler) *RouteBuilder {
+	return route.register("PATCH", handler)
 }
 
 // Delete registers DELETE handler
-func (r *RouteBuilder) Delete(handler Handler) *RouteBuilder {
-	r.del = handler
-	return r
+func (route *RouteBuilder) Delete(handler Handler) *RouteBuilder {
+	return route.register("DELETE", handler)
+}
+
+func (route *RouteBuilder) register(verb string, handler Handler) *RouteBuilder {
+	route.app.router.HandleFunc(route.pattern, route.wrapHandler(handler)).Methods(verb)
+	return route
+}
+
+func (route *RouteBuilder) wrapHandler(handler Handler) http.HandlerFunc {
+	return func(w http.ResponseWriter, req *http.Request) {
+		vars := mux.Vars(req)
+		ctx := &Context{w, req, vars, route.app}
+		res, err := handler(ctx)
+
+		var bytes []byte
+		if err != nil {
+			bytes, _ = json.Marshal(errorPayload{err.Error()})
+		} else {
+			bytes, _ = json.Marshal(res)
+		}
+
+		w.Write(bytes)
+	}
 }

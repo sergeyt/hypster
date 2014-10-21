@@ -38,49 +38,49 @@ func (app *AppBuilder) Route(pattern string) *RouteBuilder {
 // Shortcuts
 
 // Head registers HEAD handler
-func (app *AppBuilder) Head(pattern string, handler Handler) *AppBuilder {
+func (app *AppBuilder) Head(pattern string, handler interface{}) *AppBuilder {
 	app.Route(pattern).Head(handler)
 	return app
 }
 
 // Options registers OPTIONS handler
-func (app *AppBuilder) Options(pattern string, handler Handler) *AppBuilder {
+func (app *AppBuilder) Options(pattern string, handler interface{}) *AppBuilder {
 	app.Route(pattern).Options(handler)
 	return app
 }
 
 // Get registers GET handler
-func (app *AppBuilder) Get(pattern string, handler Handler) *AppBuilder {
+func (app *AppBuilder) Get(pattern string, handler interface{}) *AppBuilder {
 	app.Route(pattern).Get(handler)
 	return app
 }
 
 // Post register Post handler
-func (app *AppBuilder) Post(pattern string, handler Handler) *AppBuilder {
+func (app *AppBuilder) Post(pattern string, handler interface{}) *AppBuilder {
 	app.Route(pattern).Post(handler)
 	return app
 }
 
 // Put registers PUT handler
-func (app *AppBuilder) Put(pattern string, handler Handler) *AppBuilder {
+func (app *AppBuilder) Put(pattern string, handler interface{}) *AppBuilder {
 	app.Route(pattern).Put(handler)
 	return app
 }
 
 // Update registers UPDATE handler
-func (app *AppBuilder) Update(pattern string, handler Handler) *AppBuilder {
+func (app *AppBuilder) Update(pattern string, handler interface{}) *AppBuilder {
 	app.Route(pattern).Update(handler)
 	return app
 }
 
 // Patch registers PATCH handler
-func (app *AppBuilder) Patch(pattern string, handler Handler) *AppBuilder {
+func (app *AppBuilder) Patch(pattern string, handler interface{}) *AppBuilder {
 	app.Route(pattern).Patch(handler)
 	return app
 }
 
 // Delete registers DELETE handler
-func (app *AppBuilder) Delete(pattern string, handler Handler) *AppBuilder {
+func (app *AppBuilder) Delete(pattern string, handler interface{}) *AppBuilder {
 	app.Route(pattern).Delete(handler)
 	return app
 }
